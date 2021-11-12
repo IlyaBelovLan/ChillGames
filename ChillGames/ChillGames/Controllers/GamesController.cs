@@ -1,11 +1,12 @@
 ﻿namespace ChillGames.WebApi.Controllers
 {
-    using System;
-    using Data.Repositories.GamesRepositories;
+    using System.Net;
+    using System.Threading.Tasks;
+    using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using Models.Common;
-    using Models.Entities.Games;
-    using Swashbuckle.AspNetCore.Annotations;
+    using Models.Games;
+    using UseCases.AddGame;
+    using UseCases.GetGameById;
 
     /// <summary>
     /// Контролер для работы с книгами.
@@ -14,42 +15,45 @@
     [Route("api/[controller]")]
     public class GamesController : ControllerBase
     {
-        private readonly IGamesRepository _gamesRepository;
+        /// <summary>
+        /// <see cref="IMediator"/>.
+        /// </summary>
+        private readonly IMediator _mediator;
 
-        public GamesController(IGamesRepository gamesRepository)
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="GamesController"/>.
+        /// </summary>
+        /// <param name="mediator"><see cref="IMediator"/>.</param>
+        public GamesController(IMediator mediator)
         {
-            _gamesRepository = gamesRepository;
+            _mediator = mediator;
+        }
+        
+        /// <summary>
+        /// Получает игру по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор игры.</param>
+        /// <returns>Экземпляр <see cref="Game"/>.</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(GetGameByIdResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetGameById(string id)
+        {
+            var query = new GetGameByIdQuery { Id = id };
+            var response = await _mediator.Send(query).ConfigureAwait(false);
+            return Ok(response);
         }
 
         /// <summary>
-        /// Получает книгу.
+        /// Добавляет игру.
         /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [SwaggerOperation]
-        public IActionResult GetGame()
+        /// <param name="command">Команда добавления игры.</param>
+        /// <returns>Идентификатор игры.</returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(AddGameResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> AddGame(AddGameCommand command)
         {
-
-            var game = new EntityGame
-            {
-                Title = "Skyrim",
-                Description = "Beautiful RPG",
-                Price = 1000,
-                Discount = 0,
-                Platforms = new[] { Platform.Windows },
-                Launchers = new[] { Launcher.Steam },
-                Genre = "RPG",
-                Publisher = "Bethesda",
-                ReleaseDate = new DateTime(2011, 11, 11),
-                Count = 123
-            };
-
-            _gamesRepository.AddGame(game);
-
-            _gamesRepository.SaveChanges();
-
-            var game1 = _gamesRepository.GetGameById(1);
-            return Ok(game1);
+            var response = await _mediator.Send(command).ConfigureAwait(false);
+            return Ok(response);
         }
     }
 }

@@ -10,19 +10,14 @@
     public class EntityOrderPosition
     {
         /// <summary>
-        /// Получает или задает идентфикатор позиции заказа.
-        /// </summary>
-        public long EntityOrderPositionID { get; set; }
-        
-        /// <summary>
         /// Получает или задает идентификатор игры.
         /// </summary>
-        public string EntityGameID { get; set; }
+        public long EntityGameId { get; set; }
         
         /// <summary>
         /// Получает или задает идентификатор заказа.
         /// </summary>
-        public string EntityOrderID { get; set; }
+        public long EntityOrderId { get; set; }
         
         /// <summary>
         /// Получает или задает количество копий игры.
@@ -37,11 +32,11 @@
         /// <summary>
         /// Получает или задает заказ.
         /// </summary>
-        public EntityOrder EntityOrder { get; set; }
+        public EntityOrder Order { get; set; }
         
         /// <summary>
         /// Получает или задает игру.
         /// </summary>
-        public EntityGame EntityGame { get; set; }
+        public EntityGame Game { get; set; }
     }
 }

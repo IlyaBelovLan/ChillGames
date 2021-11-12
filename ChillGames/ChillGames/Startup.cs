@@ -3,6 +3,8 @@ namespace ChillGames.WebApi
     using System;
     using System.IO;
     using System.Reflection;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
     using Common;
     using Data.Repositories.GamesRepositories;
     using Microsoft.AspNetCore.Builder;
@@ -11,8 +13,10 @@ namespace ChillGames.WebApi
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Data.StoreContext;
+    using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.OpenApi.Models;
+    using UseCases.GetGameById;
 
     public class Startup
     {
@@ -25,12 +29,31 @@ namespace ChillGames.WebApi
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)));
 
-            services.AddDbContext<StoreContext>(options => options.UseSqlServer(Configuration.GetConnectionString("StoreContext")));
+            services.AddDbContext<StoreDbContext>(options =>
+                options
+                    .UseSqlServer(
+                        Configuration.GetConnectionString("StoreDbContext"), 
+                        b => b.MigrationsAssembly(typeof(StoreDbContext).Assembly.FullName)));
+
+            services.AddScoped<IStoreDbContext>(provider => provider.GetService<StoreDbContext>());
+
 
             services.AddTransient<IGamesRepository, GamesRepository>();
 
+            var thisAssembly = typeof(Startup).GetTypeInfo().Assembly;
+            var useCasesAssembly = typeof(GetGameByIdQuery).GetTypeInfo().Assembly;
+            
+            services.AddMediatR(thisAssembly, useCasesAssembly);
+
+            services.AddAutoMapper(thisAssembly, useCasesAssembly);
+
+            services.AddFluentValidation(useCasesAssembly);
+            
+            
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc(SwaggerSettings.DocName, new OpenApiInfo

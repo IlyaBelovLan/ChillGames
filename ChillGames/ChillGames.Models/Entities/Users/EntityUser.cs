@@ -4,15 +4,14 @@
     using System.Collections.Generic;
     using Common;
     using Games;
+    using Images;
     using Orders;
 
     [EntityModel]
-    public class EntityUser
+    public class EntityUser : IEntityWithId
     {
-        /// <summary>
-        /// Получает или задает идентификатор пользователя.
-        /// </summary>
-        public long EntityUserID { get; set; }
+        /// <inheritdoc />
+        public long Id { get; set; }
         
         /// <summary>
         /// Получает или задает имя пользователя.
@@ -28,15 +27,20 @@
         /// Получает или задает дату регистрации пользователя.
         /// </summary>
         public DateTime RegistrationDate { get; set; }
-        
+
         /// <summary>
         /// Получает или задает список заказов пользователя.
         /// </summary>
-        public IReadOnlyCollection<EntityOrder> Orders { get; set; }
-        
+        public ICollection<EntityOrder> Orders { get; set; } = new List<EntityOrder>();
+
         /// <summary>
         /// Получает или задает список желаемого пользователя.
         /// </summary>
-        public IReadOnlyCollection<EntityGame> WishList { get; set; }
+        public ICollection<EntityGame> WishList { get; set; } = new List<EntityGame>();
+
+        /// <summary>
+        /// Получает или задает аватар пользователя.
+        /// </summary>
+        public EntityUserImage UserImage { get; set; }
     }
 }

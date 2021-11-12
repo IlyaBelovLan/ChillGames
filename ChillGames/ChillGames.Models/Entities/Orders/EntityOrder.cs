@@ -1,4 +1,6 @@
-﻿namespace ChillGames.Models.Entities.Orders
+﻿using ChillGames.Models.Entities.Games;
+
+namespace ChillGames.Models.Entities.Orders
 {
     using System;
     using System.Collections.Generic;
@@ -8,22 +10,25 @@
     /// Сущность заказа из базы данных.
     /// </summary>
     [EntityModel]
-    public class EntityOrder
+    public class EntityOrder : IEntityWithId
     {
-        /// <summary>
-        /// Получает или задает идентификатор заказа.
-        /// </summary>
-        public long EntityOrderID { get; set; }
+        /// <inheritdoc />
+        public long Id { get; set; }
         
         /// <summary>
         /// Получает или задает дату заказа.
         /// </summary>
         public DateTime OrderDate { get; set; }
-        
+
         /// <summary>
-        /// Получает или задает список купленных игр, их количество и стоимость.
+        /// Получает или задает список позиций заказа.
         /// </summary>
-        public IReadOnlyCollection<EntityOrderPosition> ShoppingList { get; set; }
+        public ICollection<EntityOrderPosition> OrderPositions { get; set; } = new List<EntityOrderPosition>();
+
+        /// <summary>
+        /// Получает или задает список игр в заказе.
+        /// </summary>
+        public ICollection<EntityGame> Games { get; set; } = new List<EntityGame>();
         
         /// <summary>
         /// Получает или задает сумму заказа.

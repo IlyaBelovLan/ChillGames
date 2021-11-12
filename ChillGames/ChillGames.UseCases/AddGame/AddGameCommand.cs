@@ -1,20 +1,15 @@
-﻿namespace ChillGames.Models.Games
+﻿namespace ChillGames.UseCases.AddGame
 {
     using System;
     using System.Collections.Generic;
-    using Common;
+    using MediatR;
+    using Models.Common;
 
     /// <summary>
-    /// Модель игры.
+    /// Команда добавления игры.
     /// </summary>
-    [Model]
-    public class Game
+    public class AddGameCommand : IRequest<AddGameResponse>
     {
-        /// <summary>
-        /// Получает или задает идентификатор игры.
-        /// </summary>
-        public string Id { get; set; }
-        
         /// <summary>
         /// Получает или задает название игры.
         /// </summary>

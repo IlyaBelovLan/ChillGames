@@ -2,8 +2,11 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.EntityFrameworkCore;
+    using Models.Common.Extensions;
     using Models.Entities.Games;
     using StoreContext;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Репозиторий для доступа к играм.
@@ -13,37 +16,62 @@
         /// <summary>
         /// Инициализирует экземпляр <see cref="GamesRepository"/>.
         /// </summary>
-        /// <param name="storeContext"><see cref="GamesRepository"/>.</param>
-        public GamesRepository(StoreContext storeContext) : base(storeContext) {}
+        /// <param name="storeDbContext"><see cref="GamesRepository"/>.</param>
+        public GamesRepository(StoreDbContext storeDbContext) : base(storeDbContext) {}
 
-        public EntityGame GetGameById(long id)
+
+        /// <inheritdoc />
+        public async Task<EntityGame> GetById(long id)
         {
-            return StoreContext.Games.Find(id);
+            return await StoreDbContext
+                .Games
+                .Include(i => i.Tags)
+                .Include(i => i.Translations)
+                .Where(w => w.Id == id)
+                .FirstAsync();
+        }
+        
+        /// <inheritdoc />
+        public async Task<ICollection<EntityGame>> GetByIds(IReadOnlyCollection<long> ids)
+        {
+            return await StoreDbContext.Games.Where(w => ids.Contains(w.Id)).ToListAsync();
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<EntityGame> GetGamesByIds(IReadOnlyCollection<long> ids)
+        public async Task<long> Add(EntityGame entity)
         {
-            return StoreContext.Games.Where(s => ids.Contains(s.EntityGameID)).ToList();
+            await StoreDbContext.AddAsync(entity);
+            await StoreDbContext.SaveChanges();
+            
+            return entity.Id;
         }
 
         /// <inheritdoc />
-        public void AddGame(EntityGame game)
+        public async Task Update(EntityGame entity)
         {
-            StoreContext.Games.Add(game);
+            var game = await StoreDbContext.Games.FirstAsync(f => f.Id == entity.Id);
+
+            if (game == null)
+            {
+                await StoreDbContext.Games.AddAsync(entity);
+            }
+            else
+            {
+                game.AssignFrom(entity);
+                StoreDbContext.Games.Update(game);
+            }
+            
+            await StoreDbContext.SaveChanges();
         }
 
         /// <inheritdoc />
-        public void UpdateGame(EntityGame game)
+        public async Task DeleteById(long id)
         {
-            StoreContext.Update(game);
-        }
-
-        /// <inheritdoc />
-        public void DeleteGameById(long id)
-        {
-            var game = GetGameById(id);
-            StoreContext.Games.Remove(game);
+            var game = StartTrackingEntityWithId<EntityGame>(id);
+            
+            Delete(game);
+            
+            await SaveChanges();
         }
     }
 }

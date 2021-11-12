@@ -1,4 +1,8 @@
-﻿namespace ChillGames.Models.Entities.Tags
+﻿using System.Collections;
+using System.Collections.Generic;
+using ChillGames.Models.Entities.Games;
+
+namespace ChillGames.Models.Entities.Tags
 {
     using Common;
 
@@ -6,16 +10,19 @@
     /// Тег.
     /// </summary>
     [EntityModel]
-    public class EntityTag
+    public class EntityTag : IEntityWithId
     {
-        /// <summary>
-        /// Идентификатор тега.
-        /// </summary>
-        public long EntityTagID { get; set; }
+        /// <inheritdoc />
+        public long Id { get; set; }
         
         /// <summary>
         /// Название тега.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Получает или задает список игр.
+        /// </summary>
+        public ICollection<EntityGame> Games { get; set; } = new List<EntityGame>();
     }
 }
