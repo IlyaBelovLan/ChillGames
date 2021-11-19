@@ -51,14 +51,6 @@ namespace ChillGames.Data.StoreContext
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<EntityGame>().ToTable("Games");
-            modelBuilder.Entity<EntityTag>().ToTable("Tags");
-            modelBuilder.Entity<EntityTranslation>().ToTable("Translations");
-            modelBuilder.Entity<EntityUser>().ToTable("Users");
-            modelBuilder.Entity<EntityOrder>().ToTable("Orders");
-            modelBuilder.Entity<EntityGameImage>().ToTable("GamesImages");
-            modelBuilder.Entity<EntityUserImage>().ToTable("UserImages");
-
             modelBuilder
                 .Entity<EntityGame>()
                 .HasMany(h => h.Tags)

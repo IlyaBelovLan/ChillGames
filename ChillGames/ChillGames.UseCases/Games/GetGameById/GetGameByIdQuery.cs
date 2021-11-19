@@ -1,4 +1,4 @@
-﻿namespace ChillGames.UseCases.GetGameById
+﻿namespace ChillGames.UseCases.Games.GetGameById
 {
     using JetBrains.Annotations;
     using MediatR;

@@ -1,6 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using ChillGames.Models.Entities.Games;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChillGames.Models.Entities.Tags
 {
@@ -10,6 +12,8 @@ namespace ChillGames.Models.Entities.Tags
     /// Тег.
     /// </summary>
     [EntityModel]
+    [Table("Tags")]
+    [Index(nameof(Name), IsUnique = true)]
     public class EntityTag : IEntityWithId
     {
         /// <inheritdoc />
@@ -18,6 +22,7 @@ namespace ChillGames.Models.Entities.Tags
         /// <summary>
         /// Название тега.
         /// </summary>
+        [Required]
         public string Name { get; set; }
 
         /// <summary>

@@ -1,10 +1,13 @@
-﻿namespace ChillGames.UseCases.AddGame
+﻿namespace ChillGames.UseCases.Games.AddGame
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Common.Extensions;
     using Data.Repositories.GamesRepositories;
+    using Data.Repositories.TagsRepository;
+    using Data.UnitsOfWork;
     using JetBrains.Annotations;
     using MediatR;
     using Models.Entities.Games;
@@ -16,7 +19,7 @@
         /// <summary>
         /// <see cref="IGamesRepository"/>.
         /// </summary>
-        private readonly IGamesRepository _gamesRepository;
+        private readonly GamesUow _gamesUow;
 
         /// <summary>
         /// <see cref="IMapper"/>.
@@ -26,12 +29,12 @@
         /// <summary>
         /// Инициализирует экземпляр <see cref="AddGameUseCase"/>.
         /// </summary>
-        /// <param name="gamesRepository"><see cref="IGamesRepository"/>.</param>
+        /// <param name="gamesUow"><see cref="GamesUow"/>.</param>
         /// <param name="mapper"><see cref="IMapper"/>.</param>
-        public AddGameUseCase(IGamesRepository gamesRepository, IMapper mapper)
+        public AddGameUseCase(GamesUow gamesUow, IMapper mapper)
         {
-            _gamesRepository = gamesRepository;
             _mapper = mapper;
+            _gamesUow = gamesUow;
         }
 
 
@@ -41,11 +44,13 @@
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var game = _mapper.Map<EntityGame>(command);
+            var entityGame = _mapper.Map<EntityGame>(command);
 
-            await _gamesRepository.Add(game);
+            await _gamesUow.AddGameWithTags(entityGame);
 
-            return new AddGameResponse { Id = game.Id.ToString() };
+            await _gamesUow.SaveChangesAsync();
+
+            return new AddGameResponse { Id = entityGame.Id.ToString() };
         }
     }
 }

@@ -1,10 +1,14 @@
-﻿using ChillGames.Models.Entities.Users;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using ChillGames.Models.Common;
+using ChillGames.Models.Entities.Users;
 
 namespace ChillGames.Models.Entities.Images
 {
     /// <summary>
     /// Аватар пользователя.
     /// </summary>
+    [EntityModel]
+    [Table("UserImages")]
     public class EntityUserImage : IImage
     {
         /// <inheritdoc />

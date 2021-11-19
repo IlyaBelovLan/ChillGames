@@ -28,7 +28,7 @@ namespace ChillGames.Data.Repositories
         /// <summary>
         /// Сохраняет изменения в базе данных.
         /// </summary>
-        public virtual async Task<int> SaveChanges()
+        public virtual async Task<int> SaveChangesAsync()
         {
             return await StoreDbContext.SaveChanges();
         }
@@ -49,7 +49,7 @@ namespace ChillGames.Data.Repositories
         /// <param name="id">Идентификатор сущности.</param>
         /// <typeparam name="TEntity">Тип сущности.</typeparam>
         /// <returns>Экземпляр <see cref="TEntity"/>.</returns>
-        protected TEntity StartTrackingEntityWithId<TEntity>(long id) 
+        protected TEntity AttachEntityWithId<TEntity>(long id) 
             where TEntity : IEntityWithId, new()
         {
             var entity = new TEntity { Id = id };

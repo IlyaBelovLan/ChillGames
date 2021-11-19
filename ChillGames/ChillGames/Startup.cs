@@ -7,16 +7,18 @@ namespace ChillGames.WebApi
     using System.Text.Json.Serialization;
     using Common;
     using Data.Repositories.GamesRepositories;
+    using Data.Repositories.TagsRepository;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Data.StoreContext;
+    using Data.UnitsOfWork;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.OpenApi.Models;
-    using UseCases.GetGameById;
+    using UseCases.Games.GetGameById;
 
     public class Startup
     {
@@ -43,7 +45,9 @@ namespace ChillGames.WebApi
 
 
             services.AddTransient<IGamesRepository, GamesRepository>();
-
+            services.AddTransient<ITagsRepository, TagsRepository>();
+            services.AddTransient<GamesUow>();
+            
             var thisAssembly = typeof(Startup).GetTypeInfo().Assembly;
             var useCasesAssembly = typeof(GetGameByIdQuery).GetTypeInfo().Assembly;
             

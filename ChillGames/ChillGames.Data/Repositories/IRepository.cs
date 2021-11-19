@@ -14,36 +14,42 @@
         /// </summary>
         /// <param name="id">Идентификатор сущности.</param>
         /// <returns>Экземпляр <see cref="TEntity"/>.</returns>
-        Task<TEntity> GetById(long id);
+        Task<TEntity> GetByIdAsync(long id);
 
         /// <summary>
         /// Возвращает сущности с заданными идентификаторами.
         /// </summary>
         /// <param name="ids">Идентификаторы сущностей.</param>
         /// <returns>Список экземпляров <see cref="TEntity"/>.</returns>
-        Task<ICollection<TEntity>> GetByIds(IReadOnlyCollection<long> ids);
+        Task<ICollection<TEntity>> GetByIdsAsync(IEnumerable<long> ids);
+
+        /// <summary>
+        /// Возвращает все сущности.
+        /// </summary>
+        /// <returns>Список сущностей.</returns>
+        Task<ICollection<TEntity>> GetAllAsync();
 
         /// <summary>
         /// Добавляет сущность.
         /// </summary>
         /// <param name="entity">Экземпляр <see cref="TEntity"/>.</param>
-        Task<long> Add(TEntity entity);
+        Task<long> AddAsync(TEntity entity);
 
         /// <summary>
         /// Обновляет сущность.
         /// </summary>
         /// <param name="entity">Экземпляр <see cref="TEntity"/>.</param>
-        Task Update(TEntity entity);
+        Task UpdateAsync(TEntity entity);
 
         /// <summary>
         /// Удаляет сущность с заданным идентификатором.
         /// </summary>
         /// <param name="id">Идентификатор сущности.</param>
-        Task DeleteById(long id);
+        Task DeleteByIdAsync(long id);
 
         /// <summary>
         /// Сохраняет изменения.
         /// </summary>
-        Task<int> SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }

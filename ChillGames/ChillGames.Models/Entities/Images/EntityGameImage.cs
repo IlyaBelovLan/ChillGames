@@ -1,10 +1,14 @@
-﻿using ChillGames.Models.Entities.Games;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using ChillGames.Models.Common;
+using ChillGames.Models.Entities.Games;
 
 namespace ChillGames.Models.Entities.Images
 {
     /// <summary>
     /// Изображение, связанное с игрой.
     /// </summary>
+    [EntityModel]
+    [Table("GamesImages")]
     public class EntityGameImage : IImage
     {
         /// <inheritdoc />

@@ -1,4 +1,6 @@
-﻿using ChillGames.Models.Entities.Images;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ChillGames.Models.Entities.Images;
 using ChillGames.Models.Entities.Orders;
 using ChillGames.Models.Entities.Translations;
 
@@ -13,6 +15,7 @@ namespace ChillGames.Models.Entities.Games
     /// Сущность игры из базы данных.
     /// </summary>
     [EntityModel]
+    [Table("Games")]
     public class EntityGame : IEntityWithId
     {
         /// <inheritdoc />
@@ -21,6 +24,7 @@ namespace ChillGames.Models.Entities.Games
         /// <summary>
         /// Получает или задает название игры.
         /// </summary>
+        [Required]
         public string Title { get; set; }
 
         /// <summary>
@@ -31,7 +35,7 @@ namespace ChillGames.Models.Entities.Games
         /// <summary>
         /// Получает или задает цену игры.
         /// </summary>
-        public int Price { get; set; }
+        public int? Price { get; set; }
 
         /// <summary>
         /// Получает или задает скидку на игру.

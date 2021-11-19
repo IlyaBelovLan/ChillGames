@@ -1,20 +1,14 @@
-﻿
-
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using ChillGames.Data.Repositories.GamesRepositories;
-using ChillGames.Data.StoreContext;
-using ChillGames.Models.Games;
-using ChillGames.UseCases.Common.Extensions;
-using JetBrains.Annotations;
-using MediatR;
-
-namespace ChillGames.UseCases.GetGameById
+﻿namespace ChillGames.UseCases.Games.GetGameById
 {
-
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using AutoMapper;
+    using Common.Extensions;
+    using Data.Repositories.GamesRepositories;
+    using JetBrains.Annotations;
+    using MediatR;
+    using Models.Games;
 
     /// <inheritdoc />
     [UsedImplicitly]
@@ -48,7 +42,7 @@ namespace ChillGames.UseCases.GetGameById
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
             
-            var entityGame = await _gamesRepository.GetById(query.Id.ToLong());
+            var entityGame = await _gamesRepository.GetByIdAsync(query.Id.ToLong());
             
             var game = _mapper.Map<Game>(entityGame);
 

@@ -1,4 +1,8 @@
-﻿namespace ChillGames.Models.Entities.Users
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+namespace ChillGames.Models.Entities.Users
 {
     using System;
     using System.Collections.Generic;
@@ -8,6 +12,8 @@
     using Orders;
 
     [EntityModel]
+    [Table("Users")]
+    [Index(nameof(Email), IsUnique = true)]
     public class EntityUser : IEntityWithId
     {
         /// <inheritdoc />
@@ -16,11 +22,13 @@
         /// <summary>
         /// Получает или задает имя пользователя.
         /// </summary>
+        [Required]
         public string Name { get; set; }
         
         /// <summary>
         /// Получает или задает адрес электронной почты пользователя.
         /// </summary>
+        [Required]
         public string Email { get; set; }
         
         /// <summary>

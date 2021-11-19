@@ -1,4 +1,4 @@
-﻿namespace ChillGames.UseCases.GetGameById
+﻿namespace ChillGames.UseCases.Common.Games
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -10,12 +10,12 @@
 
     /// <inheritdoc />
     [UsedImplicitly]
-    public class GetGameByIdMapping : Profile
+    public class GamesMapping : Profile
     {
         /// <summary>
-        /// Инициализирует экземпляр <see cref="GetGameByIdMapping"/>.
+        /// Инициализирует экземпляр <see cref="GamesMapping"/>.
         /// </summary>
-        public GetGameByIdMapping()
+        public GamesMapping()
         {
             CreateMap<EntityGame, Game>()
                 .ForMember(
@@ -25,7 +25,7 @@
                     d => d.Translations,
                     o => o.MapFrom(s => 
                         s.Translations.Select(st => 
-                            new KeyValuePair<string, TranslationType> (st.Language, st.TranslationType))))
+                            new KeyValue<string, TranslationType> (st.Language, st.TranslationType))))
                 .ForMember(
                     d => d.Tags, 
                     o => o.MapFrom(s => s.Tags.Select(st => st.Name)));

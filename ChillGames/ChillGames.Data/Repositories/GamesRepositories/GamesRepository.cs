@@ -21,7 +21,7 @@
 
 
         /// <inheritdoc />
-        public async Task<EntityGame> GetById(long id)
+        public async Task<EntityGame> GetByIdAsync(long id)
         {
             return await StoreDbContext
                 .Games
@@ -32,22 +32,33 @@
         }
         
         /// <inheritdoc />
-        public async Task<ICollection<EntityGame>> GetByIds(IReadOnlyCollection<long> ids)
+        public async Task<ICollection<EntityGame>> GetByIdsAsync(IEnumerable<long> ids)
         {
             return await StoreDbContext.Games.Where(w => ids.Contains(w.Id)).ToListAsync();
         }
 
         /// <inheritdoc />
-        public async Task<long> Add(EntityGame entity)
+        public async Task<ICollection<EntityGame>> GetAllAsync()
+        {
+            var games = await StoreDbContext
+                .Games
+                .Include(i => i.Tags)
+                .Include(i => i.Translations)
+                .ToListAsync();
+
+            return games;
+        }
+
+        /// <inheritdoc />
+        public async Task<long> AddAsync(EntityGame entity)
         {
             await StoreDbContext.AddAsync(entity);
-            await StoreDbContext.SaveChanges();
-            
+
             return entity.Id;
         }
 
         /// <inheritdoc />
-        public async Task Update(EntityGame entity)
+        public async Task UpdateAsync(EntityGame entity)
         {
             var game = await StoreDbContext.Games.FirstAsync(f => f.Id == entity.Id);
 
@@ -60,18 +71,17 @@
                 game.AssignFrom(entity);
                 StoreDbContext.Games.Update(game);
             }
-            
-            await StoreDbContext.SaveChanges();
         }
 
         /// <inheritdoc />
-        public async Task DeleteById(long id)
+        public async Task DeleteByIdAsync(long id)
         {
-            var game = StartTrackingEntityWithId<EntityGame>(id);
+            await Task.Run(() =>
+            {
+                var game = AttachEntityWithId<EntityGame>(id);
             
-            Delete(game);
-            
-            await SaveChanges();
+                Delete(game);
+            });
         }
     }
 }

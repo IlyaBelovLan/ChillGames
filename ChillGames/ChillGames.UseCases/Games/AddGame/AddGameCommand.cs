@@ -1,13 +1,15 @@
-﻿namespace ChillGames.UseCases.AddGame
+﻿namespace ChillGames.UseCases.Games.AddGame
 {
     using System;
     using System.Collections.Generic;
+    using JetBrains.Annotations;
     using MediatR;
     using Models.Common;
 
     /// <summary>
     /// Команда добавления игры.
     /// </summary>
+    [PublicAPI]
     public class AddGameCommand : IRequest<AddGameResponse>
     {
         /// <summary>
@@ -53,7 +55,7 @@
         /// <summary>
         /// Получает или задает список доступных языков и тип перевода на каждый их них.
         /// </summary>
-        public IDictionary<string, TranslationType> Translations { get; set; }
+        public IReadOnlyCollection<KeyValue<string, TranslationType>> Translations { get; set; }
         
         /// <summary>
         /// Получает или задает дату выхода игры.

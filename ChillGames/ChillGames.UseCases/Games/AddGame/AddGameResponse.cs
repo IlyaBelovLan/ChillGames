@@ -1,8 +1,11 @@
-﻿namespace ChillGames.UseCases.AddGame
+﻿namespace ChillGames.UseCases.Games.AddGame
 {
+    using JetBrains.Annotations;
+
     /// <summary>
     /// Ответ для <see cref="AddGameCommand"/>.
     /// </summary>
+    [PublicAPI]
     public class AddGameResponse
     {
         /// <summary>

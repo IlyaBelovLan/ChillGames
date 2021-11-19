@@ -1,7 +1,8 @@
-﻿namespace ChillGames.UseCases.AddGame
+﻿namespace ChillGames.UseCases.Games.AddGame
 {
     using System.Linq;
     using AutoMapper;
+    using Data.Repositories.TagsRepository;
     using JetBrains.Annotations;
     using Models.Entities.Games;
     using Models.Entities.Tags;

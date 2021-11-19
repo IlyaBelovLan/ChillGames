@@ -1,4 +1,6 @@
-﻿using ChillGames.Models.Entities.Games;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ChillGames.Models.Entities.Games;
 
 namespace ChillGames.Models.Entities.Orders
 {
@@ -10,6 +12,7 @@ namespace ChillGames.Models.Entities.Orders
     /// Сущность заказа из базы данных.
     /// </summary>
     [EntityModel]
+    [Table("Orders")]
     public class EntityOrder : IEntityWithId
     {
         /// <inheritdoc />
@@ -18,6 +21,7 @@ namespace ChillGames.Models.Entities.Orders
         /// <summary>
         /// Получает или задает дату заказа.
         /// </summary>
+        [Required]
         public DateTime OrderDate { get; set; }
 
         /// <summary>
@@ -33,6 +37,7 @@ namespace ChillGames.Models.Entities.Orders
         /// <summary>
         /// Получает или задает сумму заказа.
         /// </summary>
+        [Required]
         public int Amount { get; set; }
     }
 }

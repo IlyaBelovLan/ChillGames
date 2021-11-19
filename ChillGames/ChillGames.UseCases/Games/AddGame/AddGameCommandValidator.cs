@@ -1,5 +1,6 @@
-﻿namespace ChillGames.UseCases.AddGame
+﻿namespace ChillGames.UseCases.Games.AddGame
 {
+    using Data.Repositories.TagsRepository;
     using FluentValidation;
     using JetBrains.Annotations;
 
@@ -10,9 +11,13 @@
         /// <summary>
         /// Инициализирует экземпляр <see cref="AddGameCommandValidator"/>.
         /// </summary>
-        public AddGameCommandValidator()
+        public AddGameCommandValidator(ITagsRepository tagsRepository)
         {
             CascadeMode = CascadeMode.Stop;
+
+            RuleForEach(c => c.Tags)
+                .NotEmpty()
+                .WithMessage("Тег не может быть пустым!");
             
             RuleFor(c => c.Title)
                 .NotEmpty()

@@ -1,4 +1,7 @@
-﻿namespace ChillGames.Models.Entities.Translations
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ChillGames.Models.Entities.Translations
 {
     using System.Collections.Generic;
     using Common;
@@ -8,6 +11,7 @@
     /// Язык и тип перевода игры.
     /// </summary>
     [EntityModel]
+    [Table("Translations")]
     public class EntityTranslation : IEntityWithId
     {
         /// <inheritdoc />
@@ -16,11 +20,13 @@
         /// <summary>
         /// Язык перевода.
         /// </summary>
+        [Required]
         public string Language { get; set; }
         
         /// <summary>
         /// Тип перевода.
         /// </summary>
+        [Required]
         public TranslationType TranslationType { get; set; }
 
         /// <summary>

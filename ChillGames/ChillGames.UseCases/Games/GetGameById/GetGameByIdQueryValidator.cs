@@ -1,4 +1,4 @@
-﻿namespace ChillGames.UseCases.GetGameById
+﻿namespace ChillGames.UseCases.Games.GetGameById
 {
     using FluentValidation;
     using JetBrains.Annotations;
