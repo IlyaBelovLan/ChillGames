@@ -22,7 +22,7 @@
         /// Инициализирует экземпляр <see cref="RequestValidator{TRequest}"/>.
         /// </summary>
         /// <param name="validator"><see cref="AbstractValidator{TRequest}"/>.</param>
-        public RequestValidator(AbstractValidator<TRequest> validator)
+        public RequestValidator(AbstractValidator<TRequest> validator = null)
         {
             _validator = validator;
         }
@@ -30,8 +30,7 @@
         /// <inheritdoc />
         public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            if (_validator == null) return;
 
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
             

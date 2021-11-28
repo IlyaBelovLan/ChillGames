@@ -60,11 +60,11 @@
         /// <inheritdoc />
         public async Task UpdateAsync(EntityGame entity)
         {
-            var game = await StoreDbContext.Games.FirstAsync(f => f.Id == entity.Id);
+            var game = await StoreDbContext.Games.FirstAsync(f => f.Id == entity.Id).ConfigureAwait(false);
 
             if (game == null)
             {
-                await StoreDbContext.Games.AddAsync(entity);
+                await StoreDbContext.Games.AddAsync(entity).ConfigureAwait(false);
             }
             else
             {

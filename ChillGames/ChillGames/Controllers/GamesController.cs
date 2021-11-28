@@ -7,8 +7,10 @@
     using Models.Games;
     using UseCases.Games.AddGame;
     using UseCases.Games.DeleteGameById;
+    using UseCases.Games.GetAllGames;
     using UseCases.Games.GetGameById;
     using UseCases.Games.GetGamesByIds;
+    using UseCases.Games.UpdateGame;
 
     /// <summary>
     /// Контролер для работы с книгами.
@@ -79,6 +81,31 @@
         [ProducesResponseType(typeof(GetGamesByIdsQuery), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetGamesByIds(GetGamesByIdsQuery query)
         {
+            var response = await _mediator.Send(query).ConfigureAwait(false);
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Обновляет игру.
+        /// </summary>
+        /// <param name="command">Команда обновления.</param>
+        /// <returns>Ничего не возвращает.</returns>
+        [HttpPost]
+        public async Task<IActionResult> UpdateGame(UpdateGameCommand command)
+        {
+            await _mediator.Send(command).ConfigureAwait(false);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Возвращает все игры.
+        /// </summary>
+        /// <returns>Список игр.</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(GetAllGamesResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAllGAmes()
+        {
+            var query = new GetAllGamesQuery();
             var response = await _mediator.Send(query).ConfigureAwait(false);
             return Ok(response);
         }
