@@ -15,6 +15,7 @@ namespace ChillGames.WebApi
     using Microsoft.Extensions.Hosting;
     using Data.StoreContext;
     using Data.UnitsOfWork;
+    using Infrastructure;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.OpenApi.Models;
@@ -43,7 +44,6 @@ namespace ChillGames.WebApi
 
             services.AddScoped<IStoreDbContext>(provider => provider.GetService<StoreDbContext>());
 
-
             services.AddTransient<IGamesRepository, GamesRepository>();
             services.AddTransient<ITagsRepository, TagsRepository>();
             services.AddTransient<GamesUow>();
@@ -56,7 +56,8 @@ namespace ChillGames.WebApi
             services.AddAutoMapper(thisAssembly, useCasesAssembly);
 
             services.AddFluentValidation(useCasesAssembly);
-            
+
+            services.AddControllers(options => options.Filters.Add(new ExceptionHandler()));
             
             services.AddSwaggerGen(options =>
             {
