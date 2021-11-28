@@ -2,8 +2,8 @@
 {
     using System.Linq;
     using AutoMapper;
-    using Common.Extensions;
     using JetBrains.Annotations;
+    using Models.Common.Extensions;
     using Models.Entities.Games;
     using Models.Entities.Tags;
     using Models.Entities.Translations;

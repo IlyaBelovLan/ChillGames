@@ -4,7 +4,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Common.Extensions;
     using Data.Repositories.GamesRepositories;
     using Data.Repositories.TagsRepository;
     using Data.UnitsOfWork;

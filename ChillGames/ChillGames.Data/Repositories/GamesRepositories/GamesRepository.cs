@@ -7,6 +7,7 @@
     using Models.Entities.Games;
     using StoreContext;
     using System.Threading.Tasks;
+    using Models.Games;
 
     /// <summary>
     /// Репозиторий для доступа к играм.
@@ -82,6 +83,28 @@
             
                 Delete(game);
             });
+        }
+
+        /// <inheritdoc />
+        public async Task<IReadOnlyCollection<EntityGame>> GetGamesByFiltersAsync(GamesSearchParams searchParams)
+        {
+            var filters = searchParams.GamesSearchFilters;
+            
+            var games =  await StoreDbContext
+                .Games
+                .Include(i => i.Translations)
+                .Include(i => i.Tags)
+                .Where(w => !filters.Genres.IsNullOrEmpty() ? filters.Genres.Contains(w.Genre) : true)
+                .Where(w => filters.ReleaseDateInterval != null ? filters.ReleaseDateInterval.From <= w.ReleaseDate && w.ReleaseDate <= filters.ReleaseDateInterval.To : true)
+                .Where(w => filters.PriceInterval != null ? filters.PriceInterval.From <= w.Price && w.Price <= filters.PriceInterval.To : true)
+                .OrderByDescending(searchParams.SortBy.ToSortExpression())
+                .Skip(searchParams.PageNumber * searchParams.PageSize)
+                .Take(searchParams.PageSize)
+                .ToListAsync().ConfigureAwait(false);
+
+            return games
+                .Where(w => !filters.Launchers.IsNullOrEmpty() ? filters.Launchers.Intersect(w.Launchers).Any() : true)
+                .ToList();
         }
     }
 }

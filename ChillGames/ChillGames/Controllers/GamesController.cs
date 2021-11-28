@@ -9,6 +9,7 @@
     using UseCases.Games.DeleteGameById;
     using UseCases.Games.GetAllGames;
     using UseCases.Games.GetGameById;
+    using UseCases.Games.GetGamesByFilters;
     using UseCases.Games.GetGamesByIds;
     using UseCases.Games.UpdateGame;
 
@@ -106,6 +107,14 @@
         public async Task<IActionResult> GetAllGAmes()
         {
             var query = new GetAllGamesQuery();
+            var response = await _mediator.Send(query).ConfigureAwait(false);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(GetGamesByFiltersResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetGamesByFilters(GetGamesByFiltersQuery query)
+        {
             var response = await _mediator.Send(query).ConfigureAwait(false);
             return Ok(response);
         }

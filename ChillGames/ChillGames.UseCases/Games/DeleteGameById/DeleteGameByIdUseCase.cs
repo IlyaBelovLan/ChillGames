@@ -3,10 +3,10 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Common.Extensions;
     using Data.Repositories.GamesRepositories;
     using JetBrains.Annotations;
     using MediatR;
+    using Models.Common.Extensions;
 
     /// <inheritdoc />
     [UsedImplicitly]

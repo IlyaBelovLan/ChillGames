@@ -1,4 +1,4 @@
-﻿namespace ChillGames.UseCases.Common.Extensions
+﻿namespace ChillGames.Models.Common.Extensions
 {
     using System.Collections.Generic;
     using System.Linq;

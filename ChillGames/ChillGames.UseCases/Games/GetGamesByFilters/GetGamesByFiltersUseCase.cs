@@ -1,4 +1,4 @@
-﻿namespace ChillGames.UseCases.Games.GetGamesByIds
+﻿namespace ChillGames.UseCases.Games.GetGamesByFilters
 {
     using System;
     using System.Collections.Generic;
@@ -8,12 +8,11 @@
     using Data.Repositories.GamesRepositories;
     using JetBrains.Annotations;
     using MediatR;
-    using Models.Common.Extensions;
     using Models.Games;
 
     /// <inheritdoc />
     [UsedImplicitly]
-    public class GetGamesByIdsUseCase : IRequestHandler<GetGamesByIdsQuery, GetGamesByIdsResponse>
+    public class GetGamesByFiltersUseCase : IRequestHandler<GetGamesByFiltersQuery, GetGamesByFiltersResponse>
     {
         /// <summary>
         /// <see cref="IGamesRepository"/>.
@@ -26,27 +25,27 @@
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="GetGamesByIdsUseCase"/>.
+        /// Инициализирует экземпляр <see cref="GetGamesByFiltersUseCase"/>.
         /// </summary>
         /// <param name="gamesRepository"><see cref="IGamesRepository"/>.</param>
         /// <param name="mapper"><see cref="IMapper"/>.</param>
-        public GetGamesByIdsUseCase(IGamesRepository gamesRepository, IMapper mapper)
+        public GetGamesByFiltersUseCase(IGamesRepository gamesRepository, IMapper mapper)
         {
             _gamesRepository = gamesRepository;
             _mapper = mapper;
         }
 
         /// <inheritdoc />
-        public async Task<GetGamesByIdsResponse> Handle(GetGamesByIdsQuery query, CancellationToken cancellationToken)
+        public async Task<GetGamesByFiltersResponse> Handle(GetGamesByFiltersQuery query, CancellationToken cancellationToken)
         {
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
 
-            var entityGames = await _gamesRepository.GetByIdsAsync(query.Ids.ToLongs()).ConfigureAwait(false);
+            var entityGames = await _gamesRepository.GetGamesByFiltersAsync(query).ConfigureAwait(false);
 
             var games = _mapper.Map<List<Game>>(entityGames);
 
-            return new GetGamesByIdsResponse { Games = games };
+            return new GetGamesByFiltersResponse { Games = games };
         }
     }
 }
