@@ -7,6 +7,7 @@ namespace ChillGames.WebApi
     using System.Text.Json.Serialization;
     using Common;
     using Data.Repositories.GamesRepositories;
+    using Data.Repositories.ImagesRepositories;
     using Data.Repositories.TagsRepository;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -46,6 +47,7 @@ namespace ChillGames.WebApi
 
             services.AddTransient<IGamesRepository, GamesRepository>();
             services.AddTransient<ITagsRepository, TagsRepository>();
+            services.AddTransient<IGameImagesRepository, GameImagesRepository>();
             services.AddTransient<GamesUow>();
             
             var thisAssembly = typeof(Startup).GetTypeInfo().Assembly;

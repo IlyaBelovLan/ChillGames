@@ -1,6 +1,7 @@
 ﻿namespace ChillGames.Models.Common.Extensions
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Методы расширений для коллекций.
@@ -13,6 +14,6 @@
         /// <param name="collection">Коллекция.</param>
         /// <typeparam name="T">Тип элементов коллекции.</typeparam>
         /// <returns>Истину, если коллекция пуста и ложь, если не пуста.</returns>
-        public static bool IsNullOrEmpty<T>(this IReadOnlyCollection<T> collection) => collection == null || collection.Count == 0;
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection) => collection == null || !collection.Any();
     }
 }

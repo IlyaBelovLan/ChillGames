@@ -67,6 +67,7 @@
             entityGame.Tags = unionTags;
         }
 
+        /// <inheritdoc />
         public async Task<int> SaveChangesAsync()
         {
             return await GamesRepository.SaveChangesAsync();

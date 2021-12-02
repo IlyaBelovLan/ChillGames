@@ -29,4 +29,8 @@
       <ProjectReference Include="..\ChillGames.Models\ChillGames.Models.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Images\GetGameImagesById" />
+    </ItemGroup>
+
 </Project>
