@@ -5,10 +5,10 @@
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Data.Repositories.GamesRepositories;
-    using Data.Repositories.ImagesRepositories;
+    using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
     using Models.Common.Extensions;
     using Models.Images;
 
@@ -17,9 +17,9 @@
     public class GetGameImagesByIdUseCase : IRequestHandler<GetGameImagesByIdQuery, GetGameImagesByIdResponse>
     {
         /// <summary>
-        /// <see cref="IGameImagesRepository"/>.
+        /// <see cref="StoreDbContext"/>.
         /// </summary>
-        private readonly IGamesRepository _gamesRepository;
+        private readonly StoreDbContext _dbContext;
 
         /// <summary>
         /// <see cref="IMapper"/>.
@@ -29,11 +29,11 @@
         /// <summary>
         /// Инициализирует экземпляр <see cref="GetGameImagesByIdUseCase"/>.
         /// </summary>
-        /// <param name="gamesRepository"><see cref="IGamesRepository"/>.</param>
+        /// <param name="dbContext"><see cref="StoreDbContext"/>.</param>
         /// <param name="mapper"><see cref="IMapper"/>.</param>
-        public GetGameImagesByIdUseCase(IGamesRepository gamesRepository, IMapper mapper)
+        public GetGameImagesByIdUseCase(StoreDbContext dbContext, IMapper mapper)
         {
-            _gamesRepository = gamesRepository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
@@ -43,7 +43,9 @@
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
 
-            var entityGame = await _gamesRepository.GetByIdAsync(query.Id.ToLong()).ConfigureAwait(false);
+            var entityGame = await _dbContext.Games
+                .Include(i => i.GameImages)
+                .FirstOrDefaultAsync(f => f.Id == query.Id.ToLong(), cancellationToken).ConfigureAwait(false);
 
             var entityGameImages = entityGame.GameImages;
 

@@ -4,11 +4,11 @@
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Data.Repositories.GamesRepositories;
-    using Data.Repositories.TagsRepository;
-    using Data.UnitsOfWork;
+    using Common.Extensions;
+    using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
     using Models.Entities.Games;
 
     /// <inheritdoc />
@@ -16,9 +16,9 @@
     public class AddGameUseCase : IRequestHandler<AddGameCommand, AddGameResponse>
     {
         /// <summary>
-        /// <see cref="IGamesRepository"/>.
+        /// <see cref="StoreDbContext"/>.
         /// </summary>
-        private readonly GamesUow _gamesUow;
+        private readonly StoreDbContext _dbContext;
 
         /// <summary>
         /// <see cref="IMapper"/>.
@@ -28,12 +28,12 @@
         /// <summary>
         /// Инициализирует экземпляр <see cref="AddGameUseCase"/>.
         /// </summary>
-        /// <param name="gamesUow"><see cref="GamesUow"/>.</param>
+        /// <param name="dbContext"><see cref="StoreDbContext"/>.</param>
         /// <param name="mapper"><see cref="IMapper"/>.</param>
-        public AddGameUseCase(GamesUow gamesUow, IMapper mapper)
+        public AddGameUseCase(IMapper mapper, StoreDbContext dbContext)
         {
             _mapper = mapper;
-            _gamesUow = gamesUow;
+            _dbContext = dbContext;
         }
 
 
@@ -44,11 +44,15 @@
                 throw new ArgumentNullException(nameof(command));
 
             var entityGame = _mapper.Map<EntityGame>(command);
+            
+            var existingTags = await _dbContext.Tags.ToListAsync(cancellationToken).ConfigureAwait(false);
 
-            await _gamesUow.AddGameWithTags(entityGame);
+            entityGame.ReplaceRepeatedTags(existingTags);
 
-            await _gamesUow.SaveChangesAsync();
+            await _dbContext.CreateAsync(entityGame, cancellationToken).ConfigureAwait(false);
 
+            await _dbContext.SaveChanges();
+            
             return new AddGameResponse { Id = entityGame.Id.ToString() };
         }
     }

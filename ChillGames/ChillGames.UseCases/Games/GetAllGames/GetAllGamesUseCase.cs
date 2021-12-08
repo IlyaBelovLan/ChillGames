@@ -5,9 +5,10 @@
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Data.Repositories.GamesRepositories;
+    using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
     using Models.Games;
 
     /// <inheritdoc />
@@ -20,19 +21,19 @@
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// <see cref="IGamesRepository"/>.
+        /// <see cref="StoreDbContext"/>.
         /// </summary>
-        private readonly IGamesRepository _gamesRepository;
+        private readonly StoreDbContext _dbContext;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="GetAllGamesUseCase"/>.
         /// </summary>
         /// <param name="mapper"><see cref="IMapper"/>.</param>
-        /// <param name="gamesRepository"><see cref="IGamesRepository"/>.</param>
-        public GetAllGamesUseCase(IMapper mapper, IGamesRepository gamesRepository)
+        /// <param name="dbContext"><see cref="StoreDbContext"/>.</param>
+        public GetAllGamesUseCase(IMapper mapper, StoreDbContext dbContext)
         {
             _mapper = mapper;
-            _gamesRepository = gamesRepository;
+            _dbContext = dbContext;
         }
 
         /// <inheritdoc />
@@ -41,7 +42,10 @@
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
 
-            var entityGames = await _gamesRepository.GetAllAsync().ConfigureAwait(false);
+            var entityGames = await _dbContext.Games
+                .Include(i => i.Tags)
+                .Include(i => i.Translations)
+                .ToListAsync(cancellationToken).ConfigureAwait(false);
 
             var games = _mapper.Map<List<Game>>(entityGames);
 

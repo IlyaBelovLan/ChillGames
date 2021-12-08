@@ -7,7 +7,7 @@
     /// Команда удаления игры.
     /// </summary>
     [PublicAPI]
-    public class DeleteGameByIdCommand : IRequest<Unit>
+    public class DeleteGameByIdCommand : IRequest
     {
         /// <summary>
         /// Получает или задает идентификатор игры.

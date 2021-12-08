@@ -5,14 +5,14 @@
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Data.Repositories.ImagesRepositories;
+    using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
     using Models.Entities.Images;
 
     /// <inheritdoc />
     [UsedImplicitly]
-    public class AddGameImagesUseCase : IRequestHandler<AddGameImagesCommand, Unit>
+    public class AddGameImagesUseCase : IRequestHandler<AddGameImagesCommand>
     {
         /// <summary>
         /// <see cref="IMapper"/>.
@@ -20,19 +20,19 @@
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// <see cref="IGameImagesRepository"/>.
+        /// <see cref="StoreDbContext"/>.
         /// </summary>
-        private readonly IGameImagesRepository _gameImagesRepository;
+        private readonly StoreDbContext _dbContext;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AddGameImagesUseCase"/>.
         /// </summary>
         /// <param name="mapper"><see cref="IMapper"/>.</param>
-        /// <param name="gameImagesRepository"><see cref="IGameImagesRepository"/>.</param>
-        public AddGameImagesUseCase(IMapper mapper, IGameImagesRepository gameImagesRepository)
+        /// <param name="dbContext"><see cref="StoreDbContext"/>.</param>
+        public AddGameImagesUseCase(IMapper mapper, StoreDbContext dbContext)
         {
             _mapper = mapper;
-            _gameImagesRepository = gameImagesRepository;
+            _dbContext = dbContext;
         }
 
         /// <inheritdoc />
@@ -41,14 +41,11 @@
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var images = _mapper.Map<List<EntityGameImage>>(command);
+            var entityGameImages = _mapper.Map<List<EntityGameImage>>(command);
 
-            foreach (var image in images)
-            {
-                await _gameImagesRepository.AddAsync(image).ConfigureAwait(false);
-            }
+            await _dbContext.CreateRangeAsync(entityGameImages, cancellationToken).ConfigureAwait(false);
 
-            await _gameImagesRepository.SaveChangesAsync().ConfigureAwait(false);
+            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             
             return Unit.Value;
         }

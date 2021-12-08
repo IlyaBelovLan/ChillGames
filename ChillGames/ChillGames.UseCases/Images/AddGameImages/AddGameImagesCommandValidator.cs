@@ -7,12 +7,12 @@
 
     /// <inheritdoc />
     [UsedImplicitly]
-    public class AddGameImagesValidator : AbstractValidator<AddGameImagesCommand>
+    public class AddGameImagesCommandValidator : AbstractValidator<AddGameImagesCommand>
     {
         /// <summary>
-        /// Инициализирует экземпляр <see cref="AddGameImagesValidator"/>.
+        /// Инициализирует экземпляр <see cref="AddGameImagesCommandValidator"/>.
         /// </summary>
-        public AddGameImagesValidator()
+        public AddGameImagesCommandValidator()
         {
             CascadeMode = CascadeMode.Stop;
 

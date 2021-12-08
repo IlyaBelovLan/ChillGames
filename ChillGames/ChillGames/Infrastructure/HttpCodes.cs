@@ -5,8 +5,9 @@
     /// </summary>
     public enum HttpCodes
     {
-        UnknownError = 520,
+        NoContent = 204,
         BadRequest = 400,
+        UnknownError = 520,
         NotFound = 404
     }
 }

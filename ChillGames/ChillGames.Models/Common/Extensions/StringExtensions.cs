@@ -20,6 +20,6 @@
         /// </summary>
         /// <param name="strings">Список строк.</param>
         /// <returns>Список длинных целых.</returns>
-        public static IEnumerable<long> ToLongs(this IEnumerable<string> strings) => strings.Select(s => s.ToLong());
+        public static IEnumerable<long> ToLong(this IEnumerable<string> strings) => strings.Select(s => s.ToLong());
     }
 }

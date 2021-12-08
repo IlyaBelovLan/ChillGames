@@ -6,6 +6,7 @@ namespace ChillGames.WebApi.Controllers
     using System.Threading.Tasks;
     using MediatR;
     using UseCases.Images.AddGameImages;
+    using UseCases.Images.DeleteGameImages;
     using UseCases.Images.GetGameImagesById;
 
     [ApiController]
@@ -45,6 +46,17 @@ namespace ChillGames.WebApi.Controllers
         {
             var response = await _mediator.Send(query).ConfigureAwait(false);
             return Ok(response);
+        }
+
+        /// <summary>
+        /// Удаляет игровые изображения.
+        /// </summary>
+        /// <param name="command"><see cref="DeleteGameImagesCommand"/></param>.
+        [HttpPost]
+        public async Task<IActionResult> DeleteGameImages(DeleteGameImagesCommand command)
+        {
+            await _mediator.Send(command).ConfigureAwait(false);
+            return Ok();
         }
     }
 }

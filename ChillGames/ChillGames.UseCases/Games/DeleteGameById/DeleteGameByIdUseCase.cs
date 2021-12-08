@@ -3,25 +3,26 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Data.Repositories.GamesRepositories;
+    using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
     using Models.Common.Extensions;
+    using Models.Entities.Games;
 
     /// <inheritdoc />
     [UsedImplicitly]
-    public class DeleteGameByIdUseCase : IRequestHandler<DeleteGameByIdCommand, Unit>
+    public class DeleteGameByIdUseCase : IRequestHandler<DeleteGameByIdCommand>
     {
         /// <summary>
-        /// <see cref="IGamesRepository"/>.
+        /// <see cref="StoreDbContext"/>.
         /// </summary>
-        private readonly IGamesRepository _gamesRepository;
+        private readonly StoreDbContext _dbContext;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="DeleteGameByIdUseCase"/>.
         /// </summary>
-        /// <param name="gamesRepository"><see cref="IGamesRepository"/>.</param>
-        public DeleteGameByIdUseCase(IGamesRepository gamesRepository) => _gamesRepository = gamesRepository;
+        /// <param name="dbContext"><see cref="StoreDbContext"/>.</param>
+        public DeleteGameByIdUseCase(StoreDbContext dbContext) => _dbContext = dbContext;
 
         /// <inheritdoc />
         public async Task<Unit> Handle(DeleteGameByIdCommand command, CancellationToken cancellationToken)
@@ -29,9 +30,9 @@
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            await _gamesRepository.DeleteByIdAsync(command.Id.ToLong());
+            await _dbContext.DeleteAsync<EntityGame>(command.Id.ToLong(), cancellationToken);
 
-            await _gamesRepository.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return Unit.Value;
         }

@@ -2,12 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Data.Repositories.GamesRepositories;
+    using Common.Exceptions;
+    using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using Models.Common.Extensions;
     using Models.Games;
 
     /// <inheritdoc />
@@ -15,9 +19,9 @@
     public class GetGamesByFiltersUseCase : IRequestHandler<GetGamesByFiltersQuery, GetGamesByFiltersResponse>
     {
         /// <summary>
-        /// <see cref="IGamesRepository"/>.
+        /// <see cref="StoreDbContext"/>.
         /// </summary>
-        private readonly IGamesRepository _gamesRepository;
+        private readonly StoreDbContext _dbContext;
 
         /// <summary>
         /// <see cref="IMapper"/>.
@@ -27,11 +31,11 @@
         /// <summary>
         /// Инициализирует экземпляр <see cref="GetGamesByFiltersUseCase"/>.
         /// </summary>
-        /// <param name="gamesRepository"><see cref="IGamesRepository"/>.</param>
+        /// <param name="dbContext"><see cref="StoreDbContext"/>.</param>
         /// <param name="mapper"><see cref="IMapper"/>.</param>
-        public GetGamesByFiltersUseCase(IGamesRepository gamesRepository, IMapper mapper)
+        public GetGamesByFiltersUseCase(StoreDbContext dbContext, IMapper mapper)
         {
-            _gamesRepository = gamesRepository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
@@ -41,8 +45,26 @@
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
 
-            var entityGames = await _gamesRepository.GetGamesByFiltersAsync(query).ConfigureAwait(false);
+            var filters = query.GamesSearchFilters;
+            
+            var entityGames = await _dbContext.Games
+                .Include(i => i.Translations)
+                .Include(i => i.Tags)
+                .Where(w => filters.Genres.IsNullOrEmpty() || filters.Genres.Contains(w.Genre))
+                .Where(w => filters.ReleaseDateInterval == null || filters.ReleaseDateInterval.From <= w.ReleaseDate && w.ReleaseDate <= filters.ReleaseDateInterval.To)
+                .Where(w => filters.PriceInterval == null || filters.PriceInterval.From <= w.Price && w.Price <= filters.PriceInterval.To)
+                .OrderByDescending(query.SortBy.ToSortExpression())
+                .Skip(query.PageNumber * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync(cancellationToken).ConfigureAwait(false);
 
+            entityGames = entityGames
+                .Where(w => filters.Launchers.IsNullOrEmpty() || filters.Launchers.Intersect(w.Launchers).Any())
+                .ToList();
+
+            if (entityGames == null)
+                throw new UseCaseException("Не удалось найти игры!");
+            
             var games = _mapper.Map<List<Game>>(entityGames);
 
             return new GetGamesByFiltersResponse { Games = games };

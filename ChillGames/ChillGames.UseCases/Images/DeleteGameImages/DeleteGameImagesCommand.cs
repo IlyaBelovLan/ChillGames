@@ -1,15 +1,14 @@
-﻿namespace ChillGames.UseCases.Images.AddGameImages
+﻿namespace ChillGames.UseCases.Images.DeleteGameImages
 {
     using System.Collections.Generic;
     using JetBrains.Annotations;
     using MediatR;
-    using Models.Images;
 
     /// <summary>
-    /// Команда добавления изображений для игры.
+    /// Команда удаления игровых изображений.
     /// </summary>
     [PublicAPI]
-    public class AddGameImagesCommand : IRequest
+    public class DeleteGameImagesCommand : IRequest
     {
         /// <summary>
         /// Получает или задает идентификатор игры.
@@ -17,8 +16,8 @@
         public string GameId { get; set; }
         
         /// <summary>
-        /// Получает или задает список изображений.
+        /// Получает или задает идентификаторы изображений.
         /// </summary>
-        public IReadOnlyCollection<GameImageInfo> Images { get; set; }
+        public IReadOnlyCollection<string> ImageIds { get; set; }
     }
 }

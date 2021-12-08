@@ -1,25 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ChillGames.Models.Common;
-using ChillGames.Models.Entities.Images;
-using ChillGames.Models.Entities.Translations;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-
-namespace ChillGames.Data.StoreContext
+﻿namespace ChillGames.Data.StoreContext
 {
     using Microsoft.EntityFrameworkCore;
+    using Models.Entities;
     using Models.Entities.Games;
     using Models.Entities.Orders;
     using Models.Entities.Tags;
     using Models.Entities.Users;
-
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using AutoMapper;
+    using Models.Common;
+    using Models.Entities.Images;
+    using Models.Entities.Translations;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
+    
     /// <summary>
     /// Контекст базы данных магазина.
     /// </summary>
     public class StoreDbContext : DbContext, IStoreDbContext
     {
+        /// <summary>
+        /// <see cref="IMapper"/>.
+        /// </summary>
+        private readonly IMapper _mapper;
+        
         /// <inheritdoc />
         public DbSet<EntityGame> Games { get; set; }
 
@@ -44,9 +51,15 @@ namespace ChillGames.Data.StoreContext
         }
 
         /// <inheritdoc />
-        public StoreDbContext(DbContextOptions<StoreDbContext> options) : base(options)
-        { }
+        public StoreDbContext(DbContextOptions<StoreDbContext> options, IMapper mapper) : base(options)
+        {
+            _mapper = mapper;
+        }
 
+        /// <summary>
+        /// Получает или задает набор данных для типа <see cref="TEntity"/>.
+        /// </summary>
+        private DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class => Set<TEntity>();
 
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -103,6 +116,86 @@ namespace ChillGames.Data.StoreContext
                         (c1, c2) => c1.SequenceEqual(c2),
                         c => c.Aggregate(0, (hash, el) => HashCode.Combine(hash, el.GetHashCode())),
                         c => c.ToArray() as ICollection<Platform>));
+        }
+
+        /// <summary>
+        /// Добавляет сущность.
+        /// </summary>
+        /// <param name="entity">Экземпляр <see cref="TEntity"/>.</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
+        public async Task<long> CreateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class, IEntityWithId
+        {
+            await GetDbSet<TEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            return entity.Id;
+        }
+        
+        /// <summary>
+        /// Добавляет сущности из списка.
+        /// </summary>
+        /// <param name="entityList">Экземпляр <see cref="IReadOnlyCollection{TEntity}"/>.</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
+        public async Task CreateRangeAsync<TEntity>(IReadOnlyCollection<TEntity> entityList, CancellationToken cancellationToken = default) 
+            where TEntity : class, IEntityWithId =>
+            await GetDbSet<TEntity>().AddRangeAsync(entityList, cancellationToken).ConfigureAwait(false);
+
+        /// <summary>
+        /// Обновляет сущность.
+        /// </summary>
+        /// <param name="entity">Экземпляр <see cref="TEntity"/>.</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
+        public async Task UpdateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default)  where TEntity : class, IEntityWithId
+        {
+            var dbSet = GetDbSet<TEntity>();
+            
+            var existingEntity = await dbSet.FirstAsync(f => f.Id == entity.Id, cancellationToken).ConfigureAwait(false);
+
+            if (existingEntity == null)
+            {
+                await dbSet.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                _mapper.Map(entity, existingEntity);
+                dbSet.Update(existingEntity);
+            }
+        }
+
+        /// <summary>
+        /// Удаляет сущность с указанным идентификатором. 
+        /// </summary>
+        /// <param name="id">Идентификатор сущности.</param>
+        /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
+        /// <typeparam name="TEntity">Тип сущности.</typeparam>
+        public async Task DeleteAsync<TEntity>(long id, CancellationToken cancellationToken = default)
+            where TEntity : IEntityWithId, new()
+        {
+            await Task.Run(() =>
+            {
+                var entity = AttachEntityWithId<TEntity>(id); 
+                Delete(entity);
+            },
+                cancellationToken);
+        }
+        
+        /// <summary>
+        /// Удаляет сущность из базы данных.
+        /// </summary>
+        /// <param name="entity">Экземпляр <see cref="TEntity"/>.</param>
+        /// <typeparam name="TEntity">Тип сущности.</typeparam>
+        private void Delete<TEntity>(TEntity entity) => Entry(entity).State = EntityState.Deleted;
+        
+        /// <summary>
+        /// Начинает отслеживание сущности <see cref="TEntity"/> с заданным идентификатором.
+        /// </summary>
+        /// <param name="id">Идентификатор сущности.</param>
+        /// <typeparam name="TEntity">Тип сущности.</typeparam>
+        /// <returns>Экземпляр <see cref="TEntity"/>.</returns>
+        private TEntity AttachEntityWithId<TEntity>(long id) 
+            where TEntity : IEntityWithId, new()
+        {
+            var entity = new TEntity { Id = id };
+            Attach(entity);
+            return entity;
         }
     }
 }
