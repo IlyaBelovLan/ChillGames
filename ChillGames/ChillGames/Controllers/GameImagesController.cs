@@ -2,9 +2,11 @@
 
 namespace ChillGames.WebApi.Controllers
 {
+    using System.Net;
     using System.Threading.Tasks;
     using MediatR;
     using UseCases.Images.AddGameImages;
+    using UseCases.Images.GetGameImagesById;
 
     [ApiController]
     [Route("api/[controller]/[action]")]
@@ -30,6 +32,19 @@ namespace ChillGames.WebApi.Controllers
         {
             await _mediator.Send(command).ConfigureAwait(false);
             return Ok();
+        }
+
+        /// <summary>
+        /// Получает изображения для игры.
+        /// </summary>
+        /// <param name="query"><see cref="GetGameImagesByIdQuery"/>.</param>
+        /// <returns>Список изображений.</returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(GetGameImagesByIdResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetGameImagesById(GetGameImagesByIdQuery query)
+        {
+            var response = await _mediator.Send(query).ConfigureAwait(false);
+            return Ok(response);
         }
     }
 }

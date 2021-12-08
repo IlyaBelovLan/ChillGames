@@ -30,6 +30,7 @@
                 .Games
                 .Include(i => i.Tags)
                 .Include(i => i.Translations)
+                .Include(i => i.GameImages)
                 .Where(w => w.Id == id)
                 .FirstAsync();
         }
