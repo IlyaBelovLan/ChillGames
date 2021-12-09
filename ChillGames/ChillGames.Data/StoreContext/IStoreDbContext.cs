@@ -40,10 +40,5 @@ namespace ChillGames.Data.StoreContext
         /// Получает или задает  таблицу изображений для игр.
         /// </summary>
         public DbSet<EntityGameImage> GamesImages { get; set; }
-
-        /// <summary>
-        /// Сохраняет изменения.
-        /// </summary>
-        public Task<int> SaveChanges();
     }
 }

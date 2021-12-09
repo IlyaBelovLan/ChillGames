@@ -7,6 +7,7 @@ namespace ChillGames.Models.Entities.Orders
     using System;
     using System.Collections.Generic;
     using Common;
+    using Users;
 
     /// <summary>
     /// Сущность заказа из базы данных.
@@ -34,6 +35,11 @@ namespace ChillGames.Models.Entities.Orders
         /// </summary>
         public ICollection<EntityGame> Games { get; set; } = new List<EntityGame>();
         
+        /// <summary>
+        /// Получает или задает пользователя, сделавшего заказ.
+        /// </summary>
+        public EntityUser PaidUser { get; set; }
+
         /// <summary>
         /// Получает или задает сумму заказа.
         /// </summary>

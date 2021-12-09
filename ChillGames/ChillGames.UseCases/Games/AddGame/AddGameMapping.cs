@@ -2,7 +2,6 @@
 {
     using System.Linq;
     using AutoMapper;
-    using Data.Repositories.TagsRepository;
     using JetBrains.Annotations;
     using Models.Entities.Games;
     using Models.Entities.Tags;

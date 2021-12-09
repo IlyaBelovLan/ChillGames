@@ -10,6 +10,7 @@ namespace ChillGames.Models.Entities.Games
     using System.Collections.Generic;
     using Common;
     using Tags;
+    using Users;
 
     /// <summary>
     /// Сущность игры из базы данных.
@@ -96,5 +97,10 @@ namespace ChillGames.Models.Entities.Games
         /// Получает или задет список изображений игры.
         /// </summary>
         public ICollection<EntityGameImage> GameImages { get; set; } = new List<EntityGameImage>();
+        
+        /// <summary>
+        /// Получает или задает пользователей, заинтересованных в игре.
+        /// </summary>
+        public ICollection<EntityUser> InterestedUsers { get; set; }
     }
 }

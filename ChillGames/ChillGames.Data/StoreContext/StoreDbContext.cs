@@ -45,11 +45,6 @@
         /// <inheritdoc />
         public DbSet<EntityGameImage> GamesImages { get; set; }
 
-        public new async Task<int> SaveChanges()
-        {
-            return await base.SaveChangesAsync();
-        }
-
         /// <inheritdoc />
         public StoreDbContext(DbContextOptions<StoreDbContext> options, IMapper mapper) : base(options)
         {
@@ -91,10 +86,21 @@
                         .HasForeignKey(pt => pt.EntityOrderId),
                     j =>
                     {
-                        j.HasKey(h => new {h.EntityGameId, h.EntityOrderId});
+                        j.HasKey(h => new { h.EntityGameId, h.EntityOrderId });
                         j.ToTable("OrderPositions");
                     }
                 );
+
+            modelBuilder
+                .Entity<EntityUser>()
+                .HasMany(h => h.WishListGames)
+                .WithMany(w => w.InterestedUsers)
+                .UsingEntity(u => u.ToTable("GamesByWishLists"));
+
+            modelBuilder
+                .Entity<EntityUser>()
+                .HasMany(h => h.Orders)
+                .WithOne(w => w.PaidUser);
 
             modelBuilder
                 .Entity<EntityGame>()

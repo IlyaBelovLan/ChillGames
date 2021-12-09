@@ -1,6 +1,5 @@
 ﻿namespace ChillGames.UseCases.Games.AddGame
 {
-    using Data.Repositories.TagsRepository;
     using FluentValidation;
     using JetBrains.Annotations;
 
@@ -11,7 +10,7 @@
         /// <summary>
         /// Инициализирует экземпляр <see cref="AddGameCommandValidator"/>.
         /// </summary>
-        public AddGameCommandValidator(ITagsRepository tagsRepository)
+        public AddGameCommandValidator()
         {
             CascadeMode = CascadeMode.Stop;
 

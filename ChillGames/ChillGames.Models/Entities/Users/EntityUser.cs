@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
-namespace ChillGames.Models.Entities.Users
+﻿namespace ChillGames.Models.Entities.Users
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +6,10 @@ namespace ChillGames.Models.Entities.Users
     using Games;
     using Images;
     using Orders;
-
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Microsoft.EntityFrameworkCore;
+    
     [EntityModel]
     [Table("Users")]
     [Index(nameof(Email), IsUnique = true)]
@@ -44,7 +43,7 @@ namespace ChillGames.Models.Entities.Users
         /// <summary>
         /// Получает или задает список желаемого пользователя.
         /// </summary>
-        public ICollection<EntityGame> WishList { get; set; } = new List<EntityGame>();
+        public ICollection<EntityGame> WishListGames { get; set; } = new List<EntityGame>();
 
         /// <summary>
         /// Получает или задает аватар пользователя.

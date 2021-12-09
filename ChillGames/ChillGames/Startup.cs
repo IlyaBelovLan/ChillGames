@@ -6,16 +6,12 @@ namespace ChillGames.WebApi
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using Common;
-    using Data.Repositories.GamesRepositories;
-    using Data.Repositories.ImagesRepositories;
-    using Data.Repositories.TagsRepository;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Data.StoreContext;
-    using Data.UnitsOfWork;
     using Infrastructure;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -45,11 +41,6 @@ namespace ChillGames.WebApi
 
             services.AddScoped<IStoreDbContext>(provider => provider.GetService<StoreDbContext>());
 
-            services.AddTransient<IGamesRepository, GamesRepository>();
-            services.AddTransient<ITagsRepository, TagsRepository>();
-            services.AddTransient<IGameImagesRepository, GameImagesRepository>();
-            services.AddTransient<GamesUow>();
-            
             var thisAssembly = typeof(Startup).GetTypeInfo().Assembly;
             var useCasesAssembly = typeof(GetGameByIdQuery).GetTypeInfo().Assembly;
             

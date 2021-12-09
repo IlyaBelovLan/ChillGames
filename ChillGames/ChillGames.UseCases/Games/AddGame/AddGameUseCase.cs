@@ -51,7 +51,7 @@
 
             await _dbContext.CreateAsync(entityGame, cancellationToken).ConfigureAwait(false);
 
-            await _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync(cancellationToken);
             
             return new AddGameResponse { Id = entityGame.Id.ToString() };
         }

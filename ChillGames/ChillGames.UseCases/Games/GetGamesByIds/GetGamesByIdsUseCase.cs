@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Common.Exceptions;
-    using Data.Repositories.GamesRepositories;
     using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
