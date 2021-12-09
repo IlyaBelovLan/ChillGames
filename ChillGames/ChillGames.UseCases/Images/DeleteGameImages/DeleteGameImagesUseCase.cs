@@ -4,12 +4,12 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Common.Exceptions;
     using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Models.Common.Extensions;
+    using UseCases.Common.Exceptions;
 
     /// <inheritdoc />
     [UsedImplicitly]

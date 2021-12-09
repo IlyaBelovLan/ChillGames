@@ -16,11 +16,13 @@
         /// <summary>
         /// Получает или задет флаг изображения-обложки.
         /// </summary>
-        public bool IsPreview { get; set; }
+        /// TODO: убрать nullable.
+        public bool? IsPreview { get; set; }
 
         /// <summary>
         /// Получает или задает порядок изображения в списке скриншотов.
         /// </summary>
-        public int Order { get; set; }
+        /// TODO: убрать nullable.
+        public int? Order { get; set; }
     }
 }

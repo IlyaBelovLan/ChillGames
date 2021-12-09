@@ -8,6 +8,7 @@ namespace ChillGames.WebApi.Controllers
     using UseCases.Images.AddGameImages;
     using UseCases.Images.DeleteGameImages;
     using UseCases.Images.GetGameImagesById;
+    using UseCases.Images.UpdateGameImages;
 
     [ApiController]
     [Route("api/[controller]/[action]")]
@@ -54,6 +55,17 @@ namespace ChillGames.WebApi.Controllers
         /// <param name="command"><see cref="DeleteGameImagesCommand"/></param>.
         [HttpPost]
         public async Task<IActionResult> DeleteGameImages(DeleteGameImagesCommand command)
+        {
+            await _mediator.Send(command).ConfigureAwait(false);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Обновляет игровые изображения.
+        /// </summary>
+        /// <param name="command"><see cref="UpdateGameImagesCommand"/>.</param>
+        [HttpPost]
+        public async Task<IActionResult> UpdateGameImages(UpdateGameImagesCommand command)
         {
             await _mediator.Send(command).ConfigureAwait(false);
             return Ok();

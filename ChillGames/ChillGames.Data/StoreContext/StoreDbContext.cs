@@ -59,7 +59,7 @@
         /// <summary>
         /// Получает или задает набор данных для типа <see cref="TEntity"/>.
         /// </summary>
-        private DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class => Set<TEntity>();
+        public DbSet<TEntity> GetDbSet<TEntity>() where TEntity : class => Set<TEntity>();
 
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
