@@ -22,9 +22,9 @@
         public DateTime OrderDate { get; set; }
         
         /// <summary>
-        /// Получает или задает список купленных игр и их количество.
+        /// Получает или задает список позиций заказа.
         /// </summary>
-        public IReadOnlyCollection<KeyValue<Game, int>> ShoppingList { get; set; }
+        public IReadOnlyCollection<OrderPosition> OrderPositions { get; set; }
         
         /// <summary>
         /// Получает или задает сумму заказа.

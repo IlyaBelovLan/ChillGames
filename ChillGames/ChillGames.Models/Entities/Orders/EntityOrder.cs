@@ -36,9 +36,14 @@ namespace ChillGames.Models.Entities.Orders
         public ICollection<EntityGame> Games { get; set; } = new List<EntityGame>();
         
         /// <summary>
+        /// Получает или задает идентификатор пользователя.
+        /// </summary>
+        public long EntityUserId { get; set; }
+        
+        /// <summary>
         /// Получает или задает пользователя, сделавшего заказ.
         /// </summary>
-        public EntityUser PaidUser { get; set; }
+        public EntityUser EntityUser { get; set; }
 
         /// <summary>
         /// Получает или задает сумму заказа.

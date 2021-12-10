@@ -4,7 +4,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Common.Exceptions;
     using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
@@ -12,6 +11,7 @@
     using Models.Common.Extensions;
     using Models.Entities.Users;
     using Models.Users;
+    using UseCases.Common.Exceptions;
 
     /// <inheritdoc />
     [UsedImplicitly]

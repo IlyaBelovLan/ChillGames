@@ -100,7 +100,7 @@
             modelBuilder
                 .Entity<EntityUser>()
                 .HasMany(h => h.Orders)
-                .WithOne(w => w.PaidUser);
+                .WithOne(w => w.EntityUser);
 
             modelBuilder
                 .Entity<EntityGame>()
