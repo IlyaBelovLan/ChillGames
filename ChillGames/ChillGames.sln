@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChillGames.Data", "ChillGam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChillGames.UseCases", "ChillGames.UseCases\ChillGames.UseCases.csproj", "{3FA0205C-2B3E-4F00-8D82-677D5690D782}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChillGames.SwaggerClient", "ChillGames.SwaggerClient\ChillGames.SwaggerClient.csproj", "{77F6CA94-73FA-44FC-A156-4F5DFA1BAA43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{3FA0205C-2B3E-4F00-8D82-677D5690D782}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FA0205C-2B3E-4F00-8D82-677D5690D782}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FA0205C-2B3E-4F00-8D82-677D5690D782}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77F6CA94-73FA-44FC-A156-4F5DFA1BAA43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77F6CA94-73FA-44FC-A156-4F5DFA1BAA43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77F6CA94-73FA-44FC-A156-4F5DFA1BAA43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77F6CA94-73FA-44FC-A156-4F5DFA1BAA43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
