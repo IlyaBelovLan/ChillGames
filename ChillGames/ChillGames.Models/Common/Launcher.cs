@@ -1,7 +1,7 @@
 ﻿namespace ChillGames.Models.Common
 {
     /// <summary>
-    /// Лаунчеры
+    /// Лаунчеры.
     /// </summary>
     public enum Launcher
     {
@@ -23,6 +23,21 @@
         /// <summary>
         /// Лаунчер UbisoftConnect.
         /// </summary>
-        UbisoftConnect
+        UbisoftConnect,
+        
+        /// <summary>
+        /// Лаунчер Mojang.
+        /// </summary>
+        Mojang,
+        
+        /// <summary>
+        /// Лаунчер BattleNet.
+        /// </summary>
+        BattleNet,
+        
+        /// <summary>
+        /// Лаунчер Origin.
+        /// </summary>
+        Origin
     }
 }
