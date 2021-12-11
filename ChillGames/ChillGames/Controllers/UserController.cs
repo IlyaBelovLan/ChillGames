@@ -7,6 +7,7 @@ namespace ChillGames.WebApi.Controllers
     using MediatR;
     using UseCases.Users.AddOrderToUser;
     using UseCases.Users.AddUser;
+    using UseCases.Users.GetOrdersForUser;
     using UseCases.Users.GetUserInfo;
 
     [ApiController]
@@ -63,6 +64,19 @@ namespace ChillGames.WebApi.Controllers
         public async Task<IActionResult> AddOrderToUser(AddOrderToUserCommand command)
         {
             var response = await _mediator.Send(command).ConfigureAwait(false);
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Получает заказы пользователя.
+        /// </summary>
+        /// <param name="query"><see cref="GetOrdersForUserQuery"/>.</param>
+        /// <returns>Заказы пользователя.</returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(GetUserInfoResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetOrdersForUser(GetOrdersForUserQuery query)
+        {
+            var response = await _mediator.Send(query).ConfigureAwait(false);
             return Ok(response);
         }
     }

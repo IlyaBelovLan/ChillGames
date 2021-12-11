@@ -14,7 +14,7 @@
         /// <summary>
         /// Получает или задает идентификатор заказа.
         /// </summary>
-        public long Id { get; set; }
+        public string Id { get; set; }
         
         /// <summary>
         /// Получает или задает дату заказа.
