@@ -4,11 +4,11 @@
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Common.Extensions;
     using Data.StoreContext;
     using JetBrains.Annotations;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
+    using Models.Common.Extensions;
     using Models.Entities.Games;
 
     /// <inheritdoc />

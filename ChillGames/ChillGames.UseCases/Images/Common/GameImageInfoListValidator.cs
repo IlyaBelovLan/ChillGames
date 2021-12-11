@@ -26,7 +26,7 @@
                 .SetValidator(new GameImageInfoValidator());
             
             RuleFor(l => l.ToList())
-                .Must(m => m.All(a => a.Order >= 1 && a.Order <= m.Count))
+                .Must(m => m.Where(w => w.IsPreview != null && !w.IsPreview.Value).All(a => a.Order >= 1 && a.Order <= m.Count))
                 .WithMessage(l => $"Порядковый номер изображения должен быть в пределах от 1 до {l.Count()}");
 
             RuleFor(l => l)

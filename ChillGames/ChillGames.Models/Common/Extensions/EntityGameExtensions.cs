@@ -1,25 +1,33 @@
 ﻿namespace ChillGames.Models.Common.Extensions
 {
+    using System.Collections.Generic;
     using System.Linq;
+    using Entities;
     using Entities.Games;
+    using Entities.Tags;
 
     /// <summary>
-    /// Методы расширения для <see cref="EntityGame"/>.
+    /// Методы расширений для <see cref="EntityGame"/>.
     /// </summary>
     public static class EntityGameExtensions
     {
         /// <summary>
-        /// Копирует значения <see cref="source"/> в <see cref="destination"/>. 
+        /// Заменяет теги в <see cref="EntityGame"/> аналогичными тегами из <see cref="ICollection{EntityTag}"/>
         /// </summary>
-        /// <param name="destination">Экземпляр <see cref="TEntity"/>, которому присваивается значение.</param>
-        /// <param name="source">Источник значений.</param>
-        /// <typeparam name="TEntity">Тип объекта, с которым идет работа.</typeparam>
-        public static void AssignFrom<TEntity>(this TEntity destination, TEntity source)
+        /// <param name="entityGame">Игра.</param>
+        /// <param name="actualTags">Список тегов.</param>
+        public static void ReplaceRepeatedTags(this EntityGame entityGame, ICollection<EntityTag> actualTags)
         {
-            destination
-                .GetType().GetProperties().ToList()
-                .ForEach(p => p
-                    .SetValue(destination, p.GetValue(source)));
+            var gameTags = entityGame.Tags.ToList();
+            var entityTagComparer = new EntityTagComparer(); 
+
+            var intersectTags = actualTags.Intersect(gameTags, entityTagComparer).ToList();
+
+            var exceptTags = gameTags.Except(intersectTags, entityTagComparer).ToList();
+
+            var unionTags = intersectTags.Union(exceptTags).ToList();
+
+            entityGame.Tags = unionTags;
         }
     }
 }
