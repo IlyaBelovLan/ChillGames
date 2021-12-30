@@ -8,6 +8,7 @@ namespace ChillGames.WebApi.Controllers
     using UseCases.Images.AddGameImages;
     using UseCases.Images.DeleteGameImages;
     using UseCases.Images.GetGameImagesById;
+    using UseCases.Images.GetGamePreview;
     using UseCases.Images.UpdateGameImages;
 
     [ApiController]
@@ -69,6 +70,20 @@ namespace ChillGames.WebApi.Controllers
         {
             await _mediator.Send(command).ConfigureAwait(false);
             return Ok();
+        }
+        
+        /// <summary>
+        /// Получает обложку для игры.
+        /// </summary>
+        /// <param name="id">Идентификатор игры.</param>
+        /// <returns>Изображение.</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(GetGamePreviewResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetGamePreview(string id)
+        {
+            var query = new GetGamePreviewQuery { Id = id };
+            var response = await _mediator.Send(query).ConfigureAwait(false);
+            return Ok(response);
         }
     }
 }

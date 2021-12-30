@@ -52,7 +52,7 @@
                 .Include(i => i.Tags)
                 .Where(w => filters.Genres.IsNullOrEmpty() || filters.Genres.Contains(w.Genre))
                 .Where(w => filters.ReleaseDateInterval == null || filters.ReleaseDateInterval.From <= w.ReleaseDate && w.ReleaseDate <= filters.ReleaseDateInterval.To)
-                .Where(w => filters.PriceInterval == null || filters.PriceInterval.From <= w.Price && w.Price <= filters.PriceInterval.To)
+                .Where(w => filters.PriceInterval == null || filters.PriceInterval.From <= w.Price * (100 - w.Discount) / 100 && w.Price * (100 - w.Discount) / 100 <= filters.PriceInterval.To)
                 .OrderByDescending(query.SortBy.ToSortExpression())
                 .Skip(query.PageNumber * query.PageSize)
                 .Take(query.PageSize)
